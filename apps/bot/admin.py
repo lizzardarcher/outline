@@ -1,13 +1,48 @@
 from django.contrib import admin
 from apps.bot.models import TelegramBot, TelegramUser, TelegramReferral, ReferralSettings, GlobalSettings, VpnKey, \
-    Server, IncomeInfo, Transaction, Price
+    Server, IncomeInfo, Transaction, Price, WithdrawalRequest
 from django.conf import settings
 
 DEBUG = settings.DEBUG
 
 
+class WithdrawalRequestInline(admin.TabularInline):
+    model = WithdrawalRequest
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 class TransactionInline(admin.TabularInline):
     model = Transaction
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+class VpnKeyInline(admin.TabularInline):
+    model = VpnKey
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(TelegramUser)
@@ -19,7 +54,7 @@ class TelegramUserAdmin(admin.ModelAdmin):
         readonly_fields = ('join_date', 'first_name', 'last_name', 'username',)
     ordering = ('-subscription_status', 'subscription_expiration',)
     empty_value_display = '---'
-    inlines = [TransactionInline]
+    inlines = [TransactionInline, VpnKeyInline, WithdrawalRequestInline]
 
     def has_add_permission(self, request):
         if not DEBUG:
@@ -83,6 +118,21 @@ class TransactionAdmin(admin.ModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
+
+
+@admin.register(WithdrawalRequest)
+class WithdrawalRequestAdmin(admin.ModelAdmin):
+    list_display = ('user', 'amount', 'status', 'currency', 'timestamp')
+    list_editable = ['status']
+
+    def has_add_permission(self, request, obj=None):
+        if not DEBUG:
+            return False
+        else:
+            return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(ReferralSettings)

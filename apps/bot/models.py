@@ -159,3 +159,18 @@ class Price(models.Model):
     class Meta:
         verbose_name = 'Price'
         verbose_name_plural = 'Price'
+
+
+class WithdrawalRequest(models.Model):
+    user = models.ForeignKey(TelegramUser, on_delete=models.CASCADE, verbose_name='User')
+    amount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2, verbose_name='Amount')
+    status = models.BooleanField(default=False, verbose_name='Status')
+    currency = models.CharField(blank=True, max_length=1000, verbose_name='Currency')
+    timestamp = models.DateTimeField(blank=True, null=True, verbose_name='Timestamp')
+
+    def __str__(self):
+        return 'Withdrawal'
+
+    class Meta:
+        verbose_name = 'Withdrawal'
+        verbose_name_plural = 'Withdrawal'
