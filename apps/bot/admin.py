@@ -1,9 +1,13 @@
 from django.contrib import admin
 from apps.bot.models import TelegramBot, TelegramUser, TelegramReferral, ReferralSettings, GlobalSettings, VpnKey, \
     Server, IncomeInfo, Transaction, Price
+from django.conf import settings
+
+DEBUG = settings.DEBUG
 
 
-# Register your models here.
+class TransactionInline(admin.TabularInline):
+    model = Transaction
 
 
 @admin.register(TelegramUser)
@@ -11,12 +15,17 @@ class TelegramUserAdmin(admin.ModelAdmin):
     list_display = (
         'join_date', 'first_name', 'last_name', 'username', 'subscription_status', 'subscription_expiration')
     search_fields = ('first_name', 'last_name', 'username', 'user_id')
-    readonly_fields = ('join_date', 'first_name', 'last_name', 'username',)
+    if not DEBUG:
+        readonly_fields = ('join_date', 'first_name', 'last_name', 'username',)
     ordering = ('-subscription_status', 'subscription_expiration',)
     empty_value_display = '---'
+    inlines = [TransactionInline]
 
     def has_add_permission(self, request):
-        return False
+        if not DEBUG:
+            return False
+        else:
+            return True
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -47,7 +56,10 @@ class TelegramReferralAdmin(admin.ModelAdmin):
     list_display = ('referrer', 'referred', 'level')
 
     def has_add_permission(self, request):
-        return False
+        if not DEBUG:
+            return False
+        else:
+            return True
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -61,7 +73,10 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ('user', 'amount', 'currency', 'timestamp')
 
     def has_add_permission(self, request):
-        return False
+        if not DEBUG:
+            return False
+        else:
+            return True
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -74,7 +89,10 @@ class TransactionAdmin(admin.ModelAdmin):
 class ReferralSettingAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
-        return False
+        if not DEBUG:
+            return False
+        else:
+            return True
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -86,7 +104,10 @@ class ReferralSettingAdmin(admin.ModelAdmin):
 @admin.register(GlobalSettings)
 class GlobalSettingAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
-        return False
+        if not DEBUG:
+            return False
+        else:
+            return True
 
     def get_actions(self, request):
         actions = super().get_actions(request)
