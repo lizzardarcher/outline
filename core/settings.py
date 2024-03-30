@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     "home",
     "apps.common",
+    "apps.bot",
     "apps.users",
     "apps.api",
     "apps.charts", 
