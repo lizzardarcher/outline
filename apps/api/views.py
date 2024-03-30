@@ -14,5 +14,5 @@ class ProductPermission(permissions.BasePermission):
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    permission_classes = (ProductPermission, )
+    permission_classes = (ProductPermission,)
     lookup_field = 'id'
