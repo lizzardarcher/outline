@@ -169,7 +169,7 @@ class WithdrawalRequest(models.Model):
     timestamp = models.DateTimeField(blank=True, null=True, verbose_name='Timestamp')
 
     def __str__(self):
-        return 'Withdrawal'
+        return f'{self.user} - {self.amount.__str__()} {self.currency} {self.timestamp} - {self.status.__str__()}'
 
     class Meta:
         verbose_name = 'Withdrawal'
